@@ -49,6 +49,8 @@ def run_scraper():
     videos_data = [get_videos_data(video) for video in videos[:10]]
     df = pd.DataFrame(videos_data)
     df.to_csv("trending.csv", index=None)
+    
+    print("Saving the Data to a CSV File")
 
 
 
