@@ -7,6 +7,8 @@ YOUTUBE_TRENDING_URL = "https://www.youtube.com/feed/trending"
 def get_driver():
     driver_options = Options()
     driver_options.add_argument("--headless")
+    driver_options.add_argument("--no-sandbox")
+    driver_options.add_argument("--disable-dev-shm-usage")
     driver = webdriver.Chrome("WebDriver/chromedriver", options=driver_options)
     return driver
 
