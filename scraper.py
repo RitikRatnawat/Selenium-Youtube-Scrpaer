@@ -48,9 +48,11 @@ def run_scraper():
     # Title, Thumbnail URL, Channel, Views, Uploaded, Link, Description
     videos_data = [get_videos_data(video) for video in videos[:10]]
     df = pd.DataFrame(videos_data)
-    df.to_csv("trending.csv", index=None)
     
     print("Saving the Data to a CSV File")
+    df.to_csv("trending.csv", index=None)
+    
+    
 
 
 
