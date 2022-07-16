@@ -1,4 +1,4 @@
-from matplotlib.pyplot import title
+import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
@@ -15,6 +15,26 @@ def get_videos(driver):
     videos = driver.find_elements_by_tag_name("ytd-video-renderer")
     return videos
 
+def get_videos_data(video):
+    
+    title = video.find_element_by_id("video-title").text
+    video_url = video.find_element_by_id("video-title").get_attribute('href')
+    thumbnail_url = video.find_element_by_tag_name("img").get_attribute('src')
+    channel_name = video.find_element_by_class_name("ytd-channel-name").text
+    views = video.find_element_by_id("metadata-line").text.split("\n")[0]
+    posted_on = video.find_element_by_id("metadata-line").text.split("\n")[1]
+    description = video.find_element_by_id("description-text").text
+    
+    return {
+        "Title" : title,
+        "Channel Name" : channel_name,
+        "Description" : description,
+        "Views" : views,
+        "Posted On" : posted_on,
+        "Video URL" : video_url,
+        "Thumbnail URL" : thumbnail_url
+    }
+        
 
 def run_scraper():
     print("Creating the Driver")
@@ -24,15 +44,11 @@ def run_scraper():
     videos = get_videos(driver)
     print(f"Found {len(videos)} Videos")
     
-    print("Parsing the First video")
+    print("Parsing Top 10 Videos")
     # Title, Thumbnail URL, Channel, Views, Uploaded, Link, Description
-    video = videos[0]
-    title = video.find_element_by_id("video-title").text
-    url = video.find_element_by_id("video-title").get_attribute('href')
-    thumbnail_url = video.find_element_by_tag_name("img").get_attribute('src')
-    print("Title : " + title)
-    print("URL : " + url)
-    print("Thumbnail URL : " + thumbnail_url)
+    videos_data = [get_videos_data(video) for video in videos[:10]]
+    df = pd.DataFrame(videos_data)
+    df.to_csv("trending.csv", index=None)
 
 
 
