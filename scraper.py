@@ -54,9 +54,6 @@ def run_scraper():
     print("Saving the Data to a CSV File")
     df.to_csv("trending.csv", index=None)
     
-    
-
-
 
 if __name__ == "__main__":
     run_scraper()
