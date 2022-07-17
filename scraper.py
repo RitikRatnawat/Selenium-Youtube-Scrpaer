@@ -1,6 +1,8 @@
+import time
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
 
 YOUTUBE_TRENDING_URL = "https://www.youtube.com/feed/trending"
 
@@ -14,11 +16,12 @@ def get_driver():
 
 def get_videos(driver):
     driver.get(YOUTUBE_TRENDING_URL)
+    driver.find_element_by_tag_name('body').send_keys(Keys.END)
+    time.sleep(15)
     videos = driver.find_elements_by_tag_name("ytd-video-renderer")
     return videos
 
 def get_videos_data(video):
-    
     title = video.find_element_by_id("video-title").text
     video_url = video.find_element_by_id("video-title").get_attribute('href')
     thumbnail_url = video.find_element_by_tag_name("img").get_attribute('src')
@@ -50,6 +53,7 @@ def run_scraper():
     # Title, Thumbnail URL, Channel, Views, Uploaded, Link, Description
     videos_data = [get_videos_data(video) for video in videos[:10]]
     df = pd.DataFrame(videos_data)
+    print(df['Thumbnail URL'])
     
     print("Saving the Data to a CSV File")
     df.to_csv("trending.csv", index=None)
