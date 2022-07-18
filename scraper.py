@@ -1,5 +1,7 @@
 import time
 import pandas as pd
+import smtplib
+import json
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
@@ -39,6 +41,33 @@ def get_videos_data(video):
         "Video URL" : video_url,
         "Thumbnail URL" : thumbnail_url
     }
+    
+
+# def send_email(BODY):
+#     try:
+#         server_ssl = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+#         server_ssl.ehlo()
+        
+#         SENDER_ADDRESS = 'you@gmail.com'
+#         SENDER_PASSWORD = "yourpassword"
+        
+#         RECEIVER_ADDRESSES = ['me@gmail.com', 'bill@gmail.com']
+#         SUBJECT = 'Youtube Trending Videos'
+
+#         EMAIL_TEXT = f"""
+#         From: {SENDER_ADDRESS}
+#         To: {", ".join(RECEIVER_ADDRESSES)}
+#         Subject: {SUBJECT}
+
+#         {BODY}
+#         """
+        
+#         server_ssl.login(SENDER_ADDRESS, SENDER_PASSWORD)
+#         server_ssl.sendmail(SENDER_ADDRESS, RECEIVER_ADDRESSES, EMAIL_TEXT)
+#         server_ssl.close()
+        
+#     except:
+#         print ('Something went wrong...')
         
 
 def run_scraper():
@@ -53,10 +82,15 @@ def run_scraper():
     # Title, Thumbnail URL, Channel, Views, Uploaded, Link, Description
     videos_data = [get_videos_data(video) for video in videos[:10]]
     df = pd.DataFrame(videos_data)
-    print(df['Thumbnail URL'])
     
     print("Saving the Data to a CSV File")
     df.to_csv("trending.csv", index=None)
+    
+    # print("Send an Email with the Results")
+    # body = json.dumps(videos_data, indent=2)
+    # send_email(body)
+    
+    print("Finished")
     
 
 if __name__ == "__main__":
